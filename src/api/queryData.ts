@@ -1,4 +1,4 @@
-const token = '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';
+const token = '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';
 
 export const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
 
