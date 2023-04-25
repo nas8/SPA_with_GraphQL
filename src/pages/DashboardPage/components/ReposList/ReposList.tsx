@@ -6,6 +6,7 @@ import Paginator from './components/Paginator/Paginator';
 import {
   selectCurrentPage,
   selectNodes,
+  selectPageLimit,
   selectSearchStatus,
   selectUsersNodes,
   setCurrentPage,
@@ -15,42 +16,36 @@ import { useLazySearchRepoQuery } from '../../../../api/querySearch';
 import { debounce } from '../../../../utils/debounce';
 import { RequestStatus } from '../../../../types/requestStatuses';
 
-const NUMBER_OF_REPOS = 10;
-
 export const ReposList: React.FC = () => {
   const defaultSearchValue = localStorage.getItem('searchValue');
 
-  const usersNodes = useSelector(selectUsersNodes);
   const { isError, isLoading, isSuccess, data } = useGetRepositoriesQuery({});
-  const [
-    searchRepo,
-    { isSuccess: isSearchSuccess, data: searchResult, isLoading: isSearchLoading },
-  ] = useLazySearchRepoQuery();
+  const [searchRepo, { isSuccess: isSearchSuccess, data: searchResult }] = useLazySearchRepoQuery();
   const [pages, setPages] = useState<number>(0);
   const [searchValue, setSearchValue] = useState(defaultSearchValue ? defaultSearchValue : '');
   const [filteredRepos, setFilteredRepos] = useState<any[]>([]);
   const currentPage = useSelector(selectCurrentPage);
   const nodes = useSelector(selectNodes);
-  const repos = data?.nodes;
-  const totalRepos = data?.totalCount;
+  const usersNodes = useSelector(selectUsersNodes);
 
   const searchStatus = useSelector(selectSearchStatus);
+  const pageLimit = useSelector(selectPageLimit);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if ((isSuccess && !searchValue) || (!searchValue && usersNodes.length)) {
-      const startIndex = currentPage * NUMBER_OF_REPOS - NUMBER_OF_REPOS;
-      const endIndex = currentPage * NUMBER_OF_REPOS;
+      const startIndex = currentPage * pageLimit - pageLimit;
+      const endIndex = currentPage * pageLimit;
 
       const newRepos = usersNodes.filter(
         (repo: any, index: number) => index >= startIndex && index < endIndex,
       );
 
-      setPages(Math.ceil(totalRepos / 10));
+      setPages(Math.ceil(usersNodes.length / pageLimit));
       setFilteredRepos(newRepos);
     }
-  }, [repos, currentPage, searchValue]);
+  }, [usersNodes, currentPage, searchValue]);
 
   useEffect(() => {
     if (
@@ -61,14 +56,14 @@ export const ReposList: React.FC = () => {
         searchRepo({ searchValue: defaultSearchValue });
       }
 
-      const startIndex = currentPage * NUMBER_OF_REPOS - NUMBER_OF_REPOS;
-      const endIndex = currentPage * NUMBER_OF_REPOS;
+      const startIndex = currentPage * pageLimit - pageLimit;
+      const endIndex = currentPage * pageLimit;
 
       const newRepos = nodes.filter(
         (repo: any, index: number) => index >= startIndex && index < endIndex,
       );
 
-      setPages(Math.ceil(nodes.length / 10));
+      setPages(Math.ceil(nodes.length / pageLimit));
       setFilteredRepos(newRepos);
     }
   }, [searchResult, currentPage, searchValue]);
@@ -98,7 +93,7 @@ export const ReposList: React.FC = () => {
               return <RepoItem key={index} data={repo} />;
             })}
           </ReposListStyled>
-          <Paginator totalPages={pages}></Paginator>
+          <Paginator totalPages={pages} pageLimit={pageLimit}></Paginator>
         </>
       );
     }

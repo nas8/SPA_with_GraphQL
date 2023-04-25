@@ -4,12 +4,12 @@ import { selectCurrentPage, setCurrentPage } from '../../../../../../store/repos
 
 interface PaginatorProps {
   totalPages: number;
-  initCurrentPage?: number;
+  pageLimit: number;
 }
 
-export const Paginator: React.FC<PaginatorProps> = ({ totalPages }) => {
+export const Paginator: React.FC<PaginatorProps> = ({ totalPages, pageLimit }) => {
   const pageNumbers = Array.from(
-    { length: totalPages > 10 ? 10 : totalPages },
+    { length: totalPages > pageLimit ? pageLimit : totalPages },
     (_, index) => index + 1,
   );
 

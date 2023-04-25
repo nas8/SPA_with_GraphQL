@@ -18,11 +18,6 @@ export const githubApi = createApi({
             viewer {
               repositories(first: 100) {
                 totalCount
-                pageInfo {
-                  hasNextPage
-                  startCursor
-                  endCursor
-                }
                 nodes {
                   name
                   stargazerCount

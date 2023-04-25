@@ -8,3 +8,8 @@ export const RepoCard = styled.div`
   border: 1px solid black;
   border-radius: 10px;
 `;
+
+export const LastItemWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;

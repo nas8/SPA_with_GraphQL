@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { useGetRepoQuery } from '../../api/queryRepo';
-import { RepoCard } from './RepoPage.styled';
+import { LastItemWrapper, RepoCard } from './RepoPage.styled';
 import { formatISODate } from '../../utils/formatISODate';
 
 export const RepoPage = () => {
@@ -37,10 +37,12 @@ export const RepoPage = () => {
             <p>Description: {!data.description ? 'No description' : data.description}</p>
             <p>Stars: {data?.stargazerCount}</p>
             <p>Languages: {strLanguages}</p>
-            <p>Last commit: {formatISODate(data.pushedAt)}</p>
-            <button style={{ width: '100px', alignSelf: 'flex-end' }} onClick={handleClick}>
-              Back
-            </button>
+            <LastItemWrapper>
+              <p style={{ marginBottom: 0 }}>Last commit: {formatISODate(data.pushedAt)}</p>
+              <button style={{ width: '100px', alignSelf: 'flex-end' }} onClick={handleClick}>
+                Back
+              </button>
+            </LastItemWrapper>
           </RepoCard>
         </div>
       )}

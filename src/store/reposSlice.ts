@@ -1,7 +1,6 @@
-import { PayloadAction, createSlice, current } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { githubApi } from '../api/queryRepos';
 import { RootState } from './store';
-import { githubApiRepo } from '../api/queryRepo';
 import { githubApiSearch } from '../api/querySearch';
 import { RequestStatus } from '../types/requestStatuses';
 
@@ -15,26 +14,17 @@ interface Node {
 interface reposSliceState {
   usersNodes: Node[];
   nodes: Node[];
-  pageInfo: {
-    endCursor: string;
-    hasNextPage: boolean;
-    startCursor: string;
-  };
   totalCount: number;
   currentPage: number;
   currentRepoName: string;
   currentRepoOwner: string;
   searchStatus: string;
+  pageLimit: number;
 }
 
 const initialState: reposSliceState = {
   usersNodes: [],
   nodes: [],
-  pageInfo: {
-    endCursor: '',
-    hasNextPage: false,
-    startCursor: '',
-  },
   totalCount: 0,
   currentPage: localStorage.getItem('currentPage')
     ? Number(localStorage.getItem('currentPage'))
@@ -42,6 +32,7 @@ const initialState: reposSliceState = {
   currentRepoName: '',
   currentRepoOwner: '',
   searchStatus: RequestStatus.IDLE,
+  pageLimit: 10,
 };
 
 export const reposSlice = createSlice({
@@ -90,5 +81,6 @@ export const selectCurrentRepoName = (state: RootState) => state.reposSlice.curr
 export const selectUsersNodes = (state: RootState) => state.reposSlice.usersNodes;
 export const selectNodes = (state: RootState) => state.reposSlice.nodes;
 export const selectSearchStatus = (state: RootState) => state.reposSlice.searchStatus;
+export const selectPageLimit = (state: RootState) => state.reposSlice.pageLimit;
 
 export default reposSlice.reducer;
