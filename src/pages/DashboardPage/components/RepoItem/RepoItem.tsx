@@ -2,23 +2,15 @@ import React from 'react';
 import { RepoLink, RepoName, StarCounter, StyledRepoItem } from './RepoItem.styled';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setCurrentRepoName, setCurrentRepoOwner } from '../../../../store/reposSlice';
+import { Repo, setCurrentRepoName, setCurrentRepoOwner } from '../../../../store/reposSlice';
 import { formatISODate } from '../../../../utils/formatISODate';
 import Star from '../../../../assets/star.svg';
 
 interface RepoItemProps {
-  data: RepoData;
-  key: string;
+  data: Repo;
 }
 
-interface RepoData {
-  name: string;
-  stargazerCount: number;
-  last_commit_date: string;
-  link: string;
-}
-
-export const RepoItem: React.FC<any> = ({ data }) => {
+export const RepoItem: React.FC<RepoItemProps> = ({ data }) => {
   const { name, stargazerCount, pushedAt, url, owner } = data;
   const navigate = useNavigate();
   const dispatch = useDispatch();

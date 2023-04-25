@@ -4,6 +4,7 @@ import { useGetRepositoriesQuery } from '../../../../api/queryRepos';
 import { ReposListStyled, ReposListWrapper, SearchWrapper, StyledInput } from './ReposList.styled';
 import Paginator from './components/Paginator/Paginator';
 import {
+  Repo,
   selectCurrentPage,
   selectNodes,
   selectPageLimit,
@@ -89,7 +90,7 @@ export const ReposList: React.FC = () => {
       return (
         <>
           <ReposListStyled>
-            {filteredRepos.map((repo: any, index: number) => {
+            {filteredRepos.map((repo: Repo, index: number) => {
               return <RepoItem key={index} data={repo} />;
             })}
           </ReposListStyled>

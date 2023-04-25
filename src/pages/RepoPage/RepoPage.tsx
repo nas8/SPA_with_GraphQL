@@ -19,7 +19,7 @@ export const RepoPage = () => {
   return (
     <>
       {isError && <div>Loading error</div>}
-      {isLoading && <div>Loading...</div>}
+      {isLoading && <h3>Loading...</h3>}
       {isSuccess && (
         <div>
           <RepoCard>

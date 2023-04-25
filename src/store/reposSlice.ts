@@ -4,16 +4,19 @@ import { RootState } from './store';
 import { githubApiSearch } from '../api/querySearch';
 import { RequestStatus } from '../types/requestStatuses';
 
-interface Node {
+export interface Repo {
   name: string;
-  stargazerCount: number;
+  owner: {
+    login: string;
+  };
   pushedAt: string;
+  stargazerCount: number;
   url: string;
 }
 
 interface reposSliceState {
-  usersNodes: Node[];
-  nodes: Node[];
+  usersNodes: Repo[];
+  nodes: Repo[];
   totalCount: number;
   currentPage: number;
   currentRepoName: string;
