@@ -7,6 +7,8 @@ import { store } from './store/store';
 import { Route, Routes } from 'react-router-dom';
 import { RepoPage } from './pages/RepoPage/RepoPage';
 
+console.log(import.meta.env);
+
 function App() {
   return (
     <Provider store={store}>
