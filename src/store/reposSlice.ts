@@ -3,6 +3,7 @@ import { githubApi } from '../api/queryRepos';
 import { RootState } from './store';
 import { githubApiRepo } from '../api/queryRepo';
 import { githubApiSearch } from '../api/querySearch';
+import { RequestStatus } from '../types/requestStatuses';
 
 interface Node {
   name: string;
@@ -23,6 +24,7 @@ interface reposSliceState {
   currentPage: number;
   currentRepoName: string;
   currentRepoOwner: string;
+  searchStatus: string;
 }
 
 const initialState: reposSliceState = {
@@ -39,6 +41,7 @@ const initialState: reposSliceState = {
     : 1,
   currentRepoName: '',
   currentRepoOwner: '',
+  searchStatus: RequestStatus.IDLE,
 };
 
 export const reposSlice = createSlice({
@@ -63,13 +66,20 @@ export const reposSlice = createSlice({
       state.usersNodes = [...payload.nodes];
       state.totalCount = payload.totalCount;
     });
+    builder.addMatcher(githubApiSearch.endpoints.searchRepo.matchPending, (state, { payload }) => {
+      state.searchStatus = RequestStatus.LOADING;
+    });
     builder.addMatcher(
       githubApiSearch.endpoints.searchRepo.matchFulfilled,
       (state, { payload }) => {
         state.nodes = [...payload];
         state.totalCount = payload.length;
+        state.searchStatus = RequestStatus.SUCCESS;
       },
     );
+    builder.addMatcher(githubApiSearch.endpoints.searchRepo.matchRejected, (state, { payload }) => {
+      state.searchStatus = RequestStatus.ERROR;
+    });
   },
 });
 
@@ -79,5 +89,6 @@ export const selectCurrentPage = (state: RootState) => state.reposSlice.currentP
 export const selectCurrentRepoName = (state: RootState) => state.reposSlice.currentRepoName;
 export const selectUsersNodes = (state: RootState) => state.reposSlice.usersNodes;
 export const selectNodes = (state: RootState) => state.reposSlice.nodes;
+export const selectSearchStatus = (state: RootState) => state.reposSlice.searchStatus;
 
 export default reposSlice.reducer;

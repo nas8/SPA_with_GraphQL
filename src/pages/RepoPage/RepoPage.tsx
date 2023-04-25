@@ -4,7 +4,7 @@ import { RepoCard } from './RepoPage.styled';
 import { formatISODate } from '../../utils/formatISODate';
 
 export const RepoPage = () => {
-  const { isSuccess, data } = useGetRepoQuery({
+  const { isError, isLoading, isSuccess, data } = useGetRepoQuery({
     owner: localStorage.getItem('currentRepoOwner'),
     name: localStorage.getItem('currentRepoName'),
   });
@@ -18,6 +18,8 @@ export const RepoPage = () => {
 
   return (
     <>
+      {isError && <div>Loading error</div>}
+      {isLoading && <div>Loading...</div>}
       {isSuccess && (
         <div>
           <RepoCard>
@@ -36,8 +38,10 @@ export const RepoPage = () => {
             <p>Stars: {data?.stargazerCount}</p>
             <p>Languages: {strLanguages}</p>
             <p>Last commit: {formatISODate(data.pushedAt)}</p>
+            <button style={{ width: '100px', alignSelf: 'flex-end' }} onClick={handleClick}>
+              Back
+            </button>
           </RepoCard>
-          <button onClick={handleClick}>Back</button>
         </div>
       )}
     </>
